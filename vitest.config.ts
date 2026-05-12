@@ -16,7 +16,10 @@ export default defineConfig({
         "src/**/*.d.ts",
         "src/app/**",
         "src/components/**",
-        "src/lib/supabase/**",
+        "src/i18n/navigation.ts",
+        "src/i18n/request.ts",
+        "src/lib/supabase/browser.ts",
+        "src/lib/supabase/server.ts",
         "src/types/**"
       ]
     }

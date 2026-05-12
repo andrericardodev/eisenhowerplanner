@@ -1,0 +1,103 @@
+{
+  "LocaleSwitcher": {
+    "label": "Cambiar idioma"
+  },
+  "Auth": {
+    "brand": "Eisenhower Planner",
+    "email": "Correo electronico",
+    "password": "Contrasena",
+    "newPassword": "Nueva contrasena",
+    "or": "o",
+    "google": "Continuar con Google",
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Inicia sesion para gestionar tus prioridades personales y de trabajo.",
+      "noAccount": "No tienes cuenta?",
+      "createAccount": "Crea una",
+      "forgotPassword": "Olvidaste tu contrasena?",
+      "submit": "Iniciar sesion"
+    },
+    "signup": {
+      "title": "Crea tu cuenta",
+      "subtitle": "La confirmacion por correo es necesaria antes de abrir tu espacio de trabajo.",
+      "hasAccount": "Ya tienes cuenta?",
+      "signIn": "Iniciar sesion",
+      "submit": "Crear cuenta"
+    },
+    "forgotPassword": {
+      "title": "Restablece tu contrasena",
+      "subtitle": "Ingresa tu correo y enviaremos un enlace seguro para restablecerla.",
+      "backToSignIn": "Volver al inicio de sesion",
+      "submit": "Enviar enlace"
+    },
+    "resetPassword": {
+      "title": "Elige una nueva contrasena",
+      "subtitle": "Usa una contrasena que no hayas usado antes en esta cuenta.",
+      "footer": "Tu sesion fue verificada por el enlace de restablecimiento.",
+      "submit": "Actualizar contrasena"
+    },
+    "messages": {
+      "confirmEmail": "Revisa tu correo para confirmar tu cuenta.",
+      "passwordResetSent": "Correo de restablecimiento de contrasena enviado."
+    }
+  },
+  "Dashboard": {
+    "brand": "Eisenhower Planner",
+    "title": "Espacio de prioridades",
+    "signOut": "Cerrar sesion"
+  },
+  "Tasks": {
+    "form": {
+      "editTitle": "Editar tarea",
+      "newTitle": "Nueva tarea",
+      "subtitle": "Los cuadrantes se calculan automaticamente.",
+      "cancel": "Cancelar",
+      "title": "Titulo",
+      "titlePlaceholder": "Preparar revision semanal",
+      "description": "Descripcion",
+      "descriptionPlaceholder": "Agrega contexto util",
+      "category": "Categoria",
+      "dueDate": "Fecha limite",
+      "urgent": "Urgente",
+      "important": "Importante",
+      "saveChanges": "Guardar cambios",
+      "addTask": "Agregar tarea"
+    },
+    "matrix": {
+      "title": "Matriz",
+      "activeTasks": "{count, plural, =0 {No hay tareas activas} =1 {# tarea activa} other {# tareas activas}}"
+    },
+    "filters": {
+      "all": "Todas",
+      "personal": "Personal",
+      "work": "Trabajo"
+    },
+    "categories": {
+      "personal": "Personal",
+      "work": "Trabajo"
+    },
+    "quadrants": {
+      "do-now": {
+        "title": "Hacer ahora",
+        "subtitle": "Urgente e importante"
+      },
+      "schedule": {
+        "title": "Programar",
+        "subtitle": "Importante, no urgente"
+      },
+      "delegate": {
+        "title": "Delegar",
+        "subtitle": "Urgente, no importante"
+      },
+      "eliminate": {
+        "title": "Eliminar",
+        "subtitle": "Ni urgente ni importante"
+      }
+    },
+    "actions": {
+      "toggleCompleted": "Alternar completada",
+      "edit": "Editar tarea",
+      "delete": "Eliminar tarea"
+    }
+  }
+}

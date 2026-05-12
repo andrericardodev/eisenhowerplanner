@@ -1,10 +1,20 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { isLocale, localizePath, routing, type Locale } from "@/i18n/routing";
 
-export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({
-    request
-  });
+function getPathLocale(pathname: string): Locale {
+  const locale = pathname.split("/")[1];
+  return isLocale(locale) ? locale : routing.defaultLocale;
+}
+
+function stripLocale(pathname: string) {
+  const segments = pathname.split("/");
+  return isLocale(segments[1]) ? `/${segments.slice(2).join("/")}` : pathname;
+}
+
+export async function updateSession(request: NextRequest, response = NextResponse.next({ request })) {
+  const locale = getPathLocale(request.nextUrl.pathname);
+  const pathname = stripLocale(request.nextUrl.pathname);
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -16,7 +26,6 @@ export async function updateSession(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) => {
             response.cookies.set(name, value, options);
           });
@@ -30,20 +39,18 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const isAuthRoute =
-    request.nextUrl.pathname.startsWith("/login") ||
-    request.nextUrl.pathname.startsWith("/signup") ||
-    request.nextUrl.pathname.startsWith("/forgot-password");
-  const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard");
+    pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/forgot-password");
+  const isProtectedRoute = pathname.startsWith("/dashboard");
 
   if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = localizePath("/login", locale);
     return NextResponse.redirect(url);
   }
 
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = localizePath("/dashboard", locale);
     return NextResponse.redirect(url);
   }
 

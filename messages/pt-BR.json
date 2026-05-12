@@ -1,0 +1,103 @@
+{
+  "LocaleSwitcher": {
+    "label": "Alterar idioma"
+  },
+  "Auth": {
+    "brand": "Eisenhower Planner",
+    "email": "E-mail",
+    "password": "Senha",
+    "newPassword": "Nova senha",
+    "or": "ou",
+    "google": "Continuar com Google",
+    "login": {
+      "title": "Boas-vindas de volta",
+      "subtitle": "Entre para gerenciar suas prioridades pessoais e de trabalho.",
+      "noAccount": "Ainda nao tem conta?",
+      "createAccount": "Crie uma",
+      "forgotPassword": "Esqueceu a senha?",
+      "submit": "Entrar"
+    },
+    "signup": {
+      "title": "Crie sua conta",
+      "subtitle": "A confirmacao por e-mail e necessaria antes de abrir seu espaco de trabalho.",
+      "hasAccount": "Ja tem uma conta?",
+      "signIn": "Entrar",
+      "submit": "Criar conta"
+    },
+    "forgotPassword": {
+      "title": "Redefina sua senha",
+      "subtitle": "Informe seu e-mail e enviaremos um link seguro de redefinicao.",
+      "backToSignIn": "Voltar para entrar",
+      "submit": "Enviar link de redefinicao"
+    },
+    "resetPassword": {
+      "title": "Escolha uma nova senha",
+      "subtitle": "Use uma senha que voce ainda nao usou nesta conta.",
+      "footer": "Sua sessao foi verificada pelo link de redefinicao.",
+      "submit": "Atualizar senha"
+    },
+    "messages": {
+      "confirmEmail": "Confira seu e-mail para confirmar sua conta.",
+      "passwordResetSent": "E-mail de redefinicao de senha enviado."
+    }
+  },
+  "Dashboard": {
+    "brand": "Eisenhower Planner",
+    "title": "Espaco de prioridades",
+    "signOut": "Sair"
+  },
+  "Tasks": {
+    "form": {
+      "editTitle": "Editar tarefa",
+      "newTitle": "Nova tarefa",
+      "subtitle": "Os quadrantes sao calculados automaticamente.",
+      "cancel": "Cancelar",
+      "title": "Titulo",
+      "titlePlaceholder": "Preparar revisao semanal",
+      "description": "Descricao",
+      "descriptionPlaceholder": "Adicione contexto util",
+      "category": "Categoria",
+      "dueDate": "Data limite",
+      "urgent": "Urgente",
+      "important": "Importante",
+      "saveChanges": "Salvar alteracoes",
+      "addTask": "Adicionar tarefa"
+    },
+    "matrix": {
+      "title": "Matriz",
+      "activeTasks": "{count, plural, =0 {Nenhuma tarefa ativa} =1 {# tarefa ativa} other {# tarefas ativas}}"
+    },
+    "filters": {
+      "all": "Todas",
+      "personal": "Pessoal",
+      "work": "Trabalho"
+    },
+    "categories": {
+      "personal": "Pessoal",
+      "work": "Trabalho"
+    },
+    "quadrants": {
+      "do-now": {
+        "title": "Fazer agora",
+        "subtitle": "Urgente e importante"
+      },
+      "schedule": {
+        "title": "Agendar",
+        "subtitle": "Importante, nao urgente"
+      },
+      "delegate": {
+        "title": "Delegar",
+        "subtitle": "Urgente, nao importante"
+      },
+      "eliminate": {
+        "title": "Eliminar",
+        "subtitle": "Nem urgente nem importante"
+      }
+    },
+    "actions": {
+      "toggleCompleted": "Alternar conclusao",
+      "edit": "Editar tarefa",
+      "delete": "Excluir tarefa"
+    }
+  }
+}

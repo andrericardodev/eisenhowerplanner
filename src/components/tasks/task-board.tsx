@@ -277,14 +277,14 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
   return (
     <>
       <section className="grid gap-4">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="grid gap-4">
           <div>
             <h2 className="text-xl font-semibold tracking-tight text-foreground">{t("matrix")}</h2>
             <p className="text-sm text-muted-foreground">
               {visibleTasks.length} {t("visibleTasks")}
             </p>
           </div>
-          <div className="flex flex-col gap-3 sm:items-end">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <SegmentedControl
               label={t("category")}
               options={["all", "personal", "work"]}

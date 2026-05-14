@@ -4,11 +4,13 @@ import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "re
 import {
   DndContext,
   PointerSensor,
+  DragOverlay,
   useDraggable,
   useDroppable,
   useSensor,
   useSensors,
-  type DragEndEvent
+  type DragEndEvent,
+  type DragStartEvent
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { AlertTriangle, Calendar, Check, Clock, Inbox, Pencil, Plus, Trash2, Users, X } from "lucide-react";
@@ -105,6 +107,7 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
   const [status, setStatus] = useState<StatusFilter>("pending");
   const [form, setForm] = useState<TaskFormState>(emptyForm);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [activeDragTask, setActiveDragTask] = useState<Task | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
@@ -240,10 +243,17 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
     setTasks((current) => current.filter((task) => task.id !== taskId));
   }
 
+  function handleDragStart(event: DragStartEvent) {
+    const taskId = String(event.active.id);
+    setActiveDragTask(tasks.find((item) => item.id === taskId) ?? null);
+  }
+
   async function handleDragEnd(event: DragEndEvent) {
     const taskId = String(event.active.id);
     const quadrantId = event.over?.id as QuadrantId | undefined;
     const quadrant = quadrantId ? getQuadrantById(quadrantId) : undefined;
+
+    setActiveDragTask(null);
 
     if (!quadrant) return;
 
@@ -302,7 +312,12 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
           </div>
         </div>
 
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <DndContext
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragCancel={() => setActiveDragTask(null)}
+          onDragEnd={handleDragEnd}
+        >
           <div className="grid min-h-[640px] grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
             {quadrants.map((quadrant) => (
               <QuadrantColumn
@@ -316,6 +331,9 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
               />
             ))}
           </div>
+          <DragOverlay>
+            {activeDragTask ? <TaskCardPreview task={activeDragTask} t={t} /> : null}
+          </DragOverlay>
         </DndContext>
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-6 text-center text-sm text-muted-foreground">
@@ -541,19 +559,16 @@ function TaskCard({ task, onEdit, onDelete, onToggleCompleted, t }: TaskCardProp
     <article
       ref={setNodeRef}
       style={style}
+      {...listeners}
+      {...attributes}
       className={cn(
-        "group relative rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:shadow-md",
-        isDragging && "z-10 opacity-70",
+        "group relative cursor-grab rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:shadow-md active:cursor-grabbing",
+        isDragging && "opacity-30",
         task.status === "completed" && "opacity-60"
       )}
     >
       <div className="flex items-start justify-between gap-3">
-        <button
-          type="button"
-          className="min-w-0 flex-1 cursor-grab text-left active:cursor-grabbing"
-          {...listeners}
-          {...attributes}
-        >
+        <div className="min-w-0 flex-1 text-left">
           <h4
             className={cn(
               "text-balance font-medium leading-snug text-foreground",
@@ -563,7 +578,7 @@ function TaskCard({ task, onEdit, onDelete, onToggleCompleted, t }: TaskCardProp
             {task.title}
           </h4>
           {task.description ? <p className="mt-2 text-sm leading-5 text-muted-foreground">{task.description}</p> : null}
-        </button>
+        </div>
         <div className="flex shrink-0 items-center gap-1">
           <IconButton
             title={task.status === "completed" ? t("markAsPending") : t("markAsCompleted")}
@@ -606,6 +621,50 @@ function TaskCard({ task, onEdit, onDelete, onToggleCompleted, t }: TaskCardProp
   );
 }
 
+function TaskCardPreview({ task, t }: { task: Task; t: (key: TranslationKey) => string }) {
+  return (
+    <article
+      className={cn(
+        "w-[min(24rem,calc(100vw-2rem))] cursor-grabbing rounded-xl border border-border bg-card p-4 shadow-2xl ring-2 ring-primary/20",
+        task.status === "completed" && "opacity-80"
+      )}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <h4
+            className={cn(
+              "text-balance font-medium leading-snug text-foreground",
+              task.status === "completed" && "line-through text-muted-foreground"
+            )}
+          >
+            {task.title}
+          </h4>
+          {task.description ? <p className="mt-2 text-sm leading-5 text-muted-foreground">{task.description}</p> : null}
+        </div>
+        <Check className="mt-1 size-4 shrink-0 text-muted-foreground" />
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <span
+          className={cn(
+            "rounded-md border px-2 py-1 font-normal capitalize",
+            task.category === "personal"
+              ? "border-quadrant-schedule/20 bg-quadrant-schedule-bg text-quadrant-schedule"
+              : "border-quadrant-delegate/20 bg-quadrant-delegate-bg text-quadrant-delegate"
+          )}
+        >
+          {task.category === "personal" ? t("personal") : t("work")}
+        </span>
+        {task.due_date ? (
+          <span className="inline-flex items-center gap-1">
+            <Calendar className="size-3" />
+            {formatDate(task.due_date)}
+          </span>
+        ) : null}
+      </div>
+    </article>
+  );
+}
+
 function IconButton({
   title,
   children,
@@ -622,6 +681,7 @@ function IconButton({
       type="button"
       title={title}
       onClick={onClick}
+      onPointerDown={(event) => event.stopPropagation()}
       className={cn(
         "inline-flex size-8 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground",
         className

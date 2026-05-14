@@ -1,0 +1,129 @@
+{
+  "LocaleSwitcher": {
+    "label": "Change language"
+  },
+  "Auth": {
+    "brand": "Eisenhower Planner",
+    "email": "Email",
+    "password": "Password",
+    "newPassword": "New password",
+    "or": "or",
+    "google": "Continue with Google",
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to manage your personal and work priorities.",
+      "noAccount": "No account?",
+      "createAccount": "Create one",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in"
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Email confirmation is required before your workspace opens.",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "submit": "Create account"
+    },
+    "forgotPassword": {
+      "title": "Reset your password",
+      "subtitle": "Enter your email and we will send a secure reset link.",
+      "backToSignIn": "Back to sign in",
+      "submit": "Send reset link"
+    },
+    "resetPassword": {
+      "title": "Choose a new password",
+      "subtitle": "Use a password you have not used for this account before.",
+      "footer": "Your session is verified by the reset link.",
+      "submit": "Update password"
+    },
+    "messages": {
+      "confirmEmail": "Check your email to confirm your account.",
+      "passwordResetSent": "Password reset email sent."
+    }
+  },
+  "Dashboard": {
+    "brand": "Eisenhower Planner",
+    "title": "Priority workspace",
+    "description": "Organize your tasks by urgency and importance to maximize your productivity.",
+    "signOut": "Sign out"
+  },
+  "UserMenu": {
+    "account": "Account",
+    "language": "Language",
+    "mode": "Mode",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "signOut": "Sign out"
+  },
+  "Tasks": {
+    "form": {
+      "editTitle": "Edit task",
+      "newTitle": "New task",
+      "subtitle": "Quadrants are calculated automatically.",
+      "cancel": "Cancel",
+      "title": "Title",
+      "titlePlaceholder": "Prepare weekly review",
+      "description": "Description",
+      "descriptionPlaceholder": "Add useful context",
+      "category": "Category",
+      "dueDate": "Due date",
+      "urgent": "Urgent",
+      "important": "Important",
+      "saveChanges": "Save changes",
+      "addTask": "Add task"
+    },
+    "matrix": {
+      "title": "Matrix",
+      "activeTasks": "{count, plural, =0 {No active tasks} =1 {# active task} other {# active tasks}}",
+      "visibleTasks": "{count, plural, =0 {No visible tasks} =1 {# visible task} other {# visible tasks}}"
+    },
+    "filters": {
+      "category": "Category",
+      "status": "Status",
+      "all": "All",
+      "personal": "Personal",
+      "work": "Work",
+      "pending": "Pending",
+      "completed": "Completed"
+    },
+    "summary": {
+      "total": "total tasks",
+      "pending": "pending",
+      "completed": "completed"
+    },
+    "categories": {
+      "personal": "Personal",
+      "work": "Work"
+    },
+    "quadrants": {
+      "do-now": {
+        "title": "Do Now",
+        "subtitle": "Urgent and important",
+        "empty": "No urgent tasks. Excellent!"
+      },
+      "schedule": {
+        "title": "Schedule",
+        "subtitle": "Important, not urgent",
+        "empty": "Add tasks to plan for the future."
+      },
+      "delegate": {
+        "title": "Delegate",
+        "subtitle": "Urgent, not important",
+        "empty": "Consider delegating tasks here."
+      },
+      "eliminate": {
+        "title": "Eliminate",
+        "subtitle": "Not urgent or important",
+        "empty": "Avoid adding tasks here."
+      }
+    },
+    "actions": {
+      "toggleCompleted": "Toggle completed",
+      "markAsPending": "Mark as pending",
+      "markAsCompleted": "Mark as completed",
+      "edit": "Edit task",
+      "delete": "Delete task"
+    }
+  }
+}

@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import {
   DndContext,
-  PointerSensor,
   DragOverlay,
+  PointerSensor,
   useDraggable,
   useDroppable,
   useSensor,
@@ -13,12 +13,11 @@ import {
   type DragStartEvent
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import { useFormatter, useTranslations } from "next-intl";
 import { AlertTriangle, Calendar, Check, Clock, Inbox, Pencil, Plus, Trash2, Users, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input, Textarea } from "@/components/ui/input";
-import { useI18n } from "@/lib/i18n/context";
-import type { TranslationKey } from "@/lib/i18n/translations";
 import { getQuadrantById, getQuadrantId, quadrants } from "@/lib/tasks";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/browser";
@@ -30,6 +29,7 @@ type TaskBoardProps = {
 };
 
 type StatusFilter = "pending" | "completed";
+type TasksTranslator = ReturnType<typeof useTranslations<"Tasks">>;
 
 type TaskFormState = {
   title: string;
@@ -56,51 +56,36 @@ const quadrantStyles: Record<
     colorClass: string;
     bgClass: string;
     borderClass: string;
-    titleKey: TranslationKey;
-    subtitleKey: TranslationKey;
-    emptyKey: TranslationKey;
   }
 > = {
   "do-now": {
     icon: <AlertTriangle className="size-4" />,
     colorClass: "text-quadrant-do",
     bgClass: "bg-quadrant-do-bg",
-    borderClass: "border-quadrant-do/20",
-    titleKey: "doNow",
-    subtitleKey: "doNowDesc",
-    emptyKey: "doNowEmpty"
+    borderClass: "border-quadrant-do/20"
   },
   schedule: {
     icon: <Calendar className="size-4" />,
     colorClass: "text-quadrant-schedule",
     bgClass: "bg-quadrant-schedule-bg",
-    borderClass: "border-quadrant-schedule/20",
-    titleKey: "schedule",
-    subtitleKey: "scheduleDesc",
-    emptyKey: "scheduleEmpty"
+    borderClass: "border-quadrant-schedule/20"
   },
   delegate: {
     icon: <Users className="size-4" />,
     colorClass: "text-quadrant-delegate",
     bgClass: "bg-quadrant-delegate-bg",
-    borderClass: "border-quadrant-delegate/20",
-    titleKey: "delegate",
-    subtitleKey: "delegateDesc",
-    emptyKey: "delegateEmpty"
+    borderClass: "border-quadrant-delegate/20"
   },
   eliminate: {
     icon: <Inbox className="size-4" />,
     colorClass: "text-quadrant-eliminate",
     bgClass: "bg-quadrant-eliminate-bg",
-    borderClass: "border-quadrant-eliminate/20",
-    titleKey: "eliminate",
-    subtitleKey: "eliminateDesc",
-    emptyKey: "eliminateEmpty"
+    borderClass: "border-quadrant-eliminate/20"
   }
 };
 
 export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
-  const { t } = useI18n();
+  const t = useTranslations("Tasks");
   const supabase = createClient();
   const [tasks, setTasks] = useState(initialTasks);
   const [category, setCategory] = useState<TaskCategory | "all">("all");
@@ -289,23 +274,23 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
       <section className="grid gap-4">
         <div className="grid gap-4">
           <div>
-            <h2 className="text-xl font-semibold tracking-tight text-foreground">{t("matrix")}</h2>
+            <h2 className="text-xl font-semibold tracking-tight text-foreground">{t("matrix.title")}</h2>
             <p className="text-sm text-muted-foreground">
-              {visibleTasks.length} {t("visibleTasks")}
+              {t("matrix.visibleTasks", { count: visibleTasks.length })}
             </p>
           </div>
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <SegmentedControl
-              label={t("category")}
+              label={t("filters.category")}
               options={["all", "personal", "work"]}
-              labels={{ all: t("all"), personal: t("personal"), work: t("work") }}
+              labels={{ all: t("filters.all"), personal: t("filters.personal"), work: t("filters.work") }}
               value={category}
               onChange={(option) => setCategory(option)}
             />
             <SegmentedControl
-              label={t("status")}
+              label={t("filters.status")}
               options={["pending", "completed"]}
-              labels={{ pending: t("pending"), completed: t("completed") }}
+              labels={{ pending: t("filters.pending"), completed: t("filters.completed") }}
               value={status}
               onChange={(option) => setStatus(option)}
             />
@@ -338,13 +323,13 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
 
         <div className="mt-4 flex flex-wrap items-center justify-center gap-6 text-center text-sm text-muted-foreground">
           <div>
-            <span className="font-semibold text-foreground">{taskCounts.total}</span> {t("totalTasks")}
+            <span className="font-semibold text-foreground">{taskCounts.total}</span> {t("summary.total")}
           </div>
           <div>
-            <span className="font-semibold text-foreground">{taskCounts.pending}</span> {t("pendingTasks")}
+            <span className="font-semibold text-foreground">{taskCounts.pending}</span> {t("summary.pending")}
           </div>
           <div>
-            <span className="font-semibold text-foreground">{taskCounts.completed}</span> {t("completedTasks")}
+            <span className="font-semibold text-foreground">{taskCounts.completed}</span> {t("summary.completed")}
           </div>
         </div>
       </section>
@@ -355,40 +340,40 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-semibold tracking-tight text-card-foreground">
-                  {editingTask ? t("editTask") : t("newTask")}
+                  {editingTask ? t("form.editTitle") : t("form.newTitle")}
                 </h2>
-                <p className="mt-1 text-sm text-muted-foreground">{t("pageDescription")}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t("form.subtitle")}</p>
               </div>
               <Button
                 type="button"
                 variant="ghost"
                 className="size-9 rounded-full px-0"
                 onClick={resetForm}
-                title="Close"
+                title={t("form.cancel")}
               >
                 <X className="size-4" />
               </Button>
             </div>
 
             <form className="mt-5 grid gap-4" onSubmit={saveTask}>
-              <Field label={t("taskTitle")}>
+              <Field label={t("form.title")}>
                 <Input
                   value={form.title}
                   onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
-                  placeholder={t("taskTitlePlaceholder")}
+                  placeholder={t("form.titlePlaceholder")}
                   required
                   autoFocus
                 />
               </Field>
-              <Field label={t("description")}>
+              <Field label={t("form.description")}>
                 <Textarea
                   value={form.description}
                   onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
-                  placeholder={t("descriptionPlaceholder")}
+                  placeholder={t("form.descriptionPlaceholder")}
                 />
               </Field>
               <div className="grid grid-cols-2 gap-3">
-                <Field label={t("category")}>
+                <Field label={t("form.category")}>
                   <select
                     value={form.category}
                     onChange={(event) =>
@@ -396,11 +381,11 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
                     }
                     className="h-10 rounded-md border border-input bg-card px-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
                   >
-                    <option value="personal">{t("personal")}</option>
-                    <option value="work">{t("work")}</option>
+                    <option value="personal">{t("categories.personal")}</option>
+                    <option value="work">{t("categories.work")}</option>
                   </select>
                 </Field>
-                <Field label={t("dueDate")}>
+                <Field label={t("form.dueDate")}>
                   <Input
                     type="date"
                     value={form.due_date}
@@ -415,7 +400,7 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
                     checked={form.is_urgent}
                     onChange={(event) => setForm((current) => ({ ...current, is_urgent: event.target.checked }))}
                   />
-                  {t("urgent")}
+                  {t("form.urgent")}
                 </label>
                 <label className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground">
                   <input
@@ -423,13 +408,13 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
                     checked={form.is_important}
                     onChange={(event) => setForm((current) => ({ ...current, is_important: event.target.checked }))}
                   />
-                  {t("important")}
+                  {t("form.important")}
                 </label>
               </div>
               {error ? <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p> : null}
               <Button type="submit" className="rounded-lg bg-primary text-primary-foreground hover:bg-primary/90">
                 <Plus className="size-4" />
-                {editingTask ? t("saveChanges") : t("addTask")}
+                {editingTask ? t("form.saveChanges") : t("form.addTask")}
               </Button>
             </form>
           </div>
@@ -476,11 +461,10 @@ type QuadrantColumnProps = {
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
   onToggleCompleted: (task: Task) => void;
-  t: (key: TranslationKey) => string;
+  t: TasksTranslator;
 };
 
 function QuadrantColumn({ quadrantId, tasks, onEdit, onDelete, onToggleCompleted, t }: QuadrantColumnProps) {
-  const quadrant = getQuadrantById(quadrantId)!;
   const style = quadrantStyles[quadrantId];
   const { isOver, setNodeRef } = useDroppable({ id: quadrantId });
 
@@ -499,8 +483,8 @@ function QuadrantColumn({ quadrantId, tasks, onEdit, onDelete, onToggleCompleted
               {style.icon}
             </div>
             <div>
-              <h3 className={cn("text-sm font-semibold", style.colorClass)}>{t(style.titleKey)}</h3>
-              <p className="text-xs text-muted-foreground">{t(style.subtitleKey)}</p>
+              <h3 className={cn("text-sm font-semibold", style.colorClass)}>{t(`quadrants.${quadrantId}.title`)}</h3>
+              <p className="text-xs text-muted-foreground">{t(`quadrants.${quadrantId}.subtitle`)}</p>
             </div>
           </div>
           <span
@@ -520,7 +504,7 @@ function QuadrantColumn({ quadrantId, tasks, onEdit, onDelete, onToggleCompleted
             <div className={cn("mb-3 flex size-10 items-center justify-center rounded-full opacity-60", style.bgClass, style.colorClass)}>
               <Clock className="size-5" />
             </div>
-            <p className="px-4 text-sm text-muted-foreground">{t(style.emptyKey)}</p>
+            <p className="px-4 text-sm text-muted-foreground">{t(`quadrants.${quadrantId}.empty`)}</p>
           </div>
         ) : (
           <div className="flex min-h-40 flex-col gap-3">
@@ -546,10 +530,11 @@ type TaskCardProps = {
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
   onToggleCompleted: (task: Task) => void;
-  t: (key: TranslationKey) => string;
+  t: TasksTranslator;
 };
 
 function TaskCard({ task, onEdit, onDelete, onToggleCompleted, t }: TaskCardProps) {
+  const format = useFormatter();
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: task.id });
   const style = {
     transform: CSS.Translate.toString(transform)
@@ -581,7 +566,7 @@ function TaskCard({ task, onEdit, onDelete, onToggleCompleted, t }: TaskCardProp
         </div>
         <div className="flex shrink-0 items-center gap-1">
           <IconButton
-            title={task.status === "completed" ? t("markAsPending") : t("markAsCompleted")}
+            title={task.status === "completed" ? t("actions.markAsPending") : t("actions.markAsCompleted")}
             onClick={() => onToggleCompleted(task)}
             className={cn(
               task.status === "completed"
@@ -591,37 +576,22 @@ function TaskCard({ task, onEdit, onDelete, onToggleCompleted, t }: TaskCardProp
           >
             <Check className="size-4" />
           </IconButton>
-          <IconButton title={t("editTask")} onClick={() => onEdit(task)} className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
+          <IconButton title={t("actions.edit")} onClick={() => onEdit(task)} className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
             <Pencil className="size-4" />
           </IconButton>
-          <IconButton title={t("deleteTask")} onClick={() => onDelete(task.id)} className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
+          <IconButton title={t("actions.delete")} onClick={() => onDelete(task.id)} className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
             <Trash2 className="size-4" />
           </IconButton>
         </div>
       </div>
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        <span
-          className={cn(
-            "rounded-md border px-2 py-1 font-normal capitalize",
-            task.category === "personal"
-              ? "border-quadrant-schedule/20 bg-quadrant-schedule-bg text-quadrant-schedule"
-              : "border-quadrant-delegate/20 bg-quadrant-delegate-bg text-quadrant-delegate"
-          )}
-        >
-          {task.category === "personal" ? t("personal") : t("work")}
-        </span>
-        {task.due_date ? (
-          <span className="inline-flex items-center gap-1">
-            <Calendar className="size-3" />
-            {formatDate(task.due_date)}
-          </span>
-        ) : null}
-      </div>
+      <TaskCardMeta task={task} t={t} formatDate={(date) => format.dateTime(date, { day: "2-digit", month: "short" })} />
     </article>
   );
 }
 
-function TaskCardPreview({ task, t }: { task: Task; t: (key: TranslationKey) => string }) {
+function TaskCardPreview({ task, t }: { task: Task; t: TasksTranslator }) {
+  const format = useFormatter();
+
   return (
     <article
       className={cn(
@@ -643,25 +613,39 @@ function TaskCardPreview({ task, t }: { task: Task; t: (key: TranslationKey) => 
         </div>
         <Check className="mt-1 size-4 shrink-0 text-muted-foreground" />
       </div>
-      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        <span
-          className={cn(
-            "rounded-md border px-2 py-1 font-normal capitalize",
-            task.category === "personal"
-              ? "border-quadrant-schedule/20 bg-quadrant-schedule-bg text-quadrant-schedule"
-              : "border-quadrant-delegate/20 bg-quadrant-delegate-bg text-quadrant-delegate"
-          )}
-        >
-          {task.category === "personal" ? t("personal") : t("work")}
-        </span>
-        {task.due_date ? (
-          <span className="inline-flex items-center gap-1">
-            <Calendar className="size-3" />
-            {formatDate(task.due_date)}
-          </span>
-        ) : null}
-      </div>
+      <TaskCardMeta task={task} t={t} formatDate={(date) => format.dateTime(date, { day: "2-digit", month: "short" })} />
     </article>
+  );
+}
+
+function TaskCardMeta({
+  task,
+  t,
+  formatDate
+}: {
+  task: Task;
+  t: TasksTranslator;
+  formatDate: (date: Date) => string;
+}) {
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      <span
+        className={cn(
+          "rounded-md border px-2 py-1 font-normal capitalize",
+          task.category === "personal"
+            ? "border-quadrant-schedule/20 bg-quadrant-schedule-bg text-quadrant-schedule"
+            : "border-quadrant-delegate/20 bg-quadrant-delegate-bg text-quadrant-delegate"
+        )}
+      >
+        {t(`categories.${task.category}`)}
+      </span>
+      {task.due_date ? (
+        <span className="inline-flex items-center gap-1">
+          <Calendar className="size-3" />
+          {formatDate(new Date(`${task.due_date}T00:00:00`))}
+        </span>
+      ) : null}
+    </div>
   );
 }
 
@@ -690,11 +674,4 @@ function IconButton({
       {children}
     </button>
   );
-}
-
-function formatDate(dateString: string) {
-  return new Date(`${dateString}T00:00:00`).toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "short"
-  });
 }

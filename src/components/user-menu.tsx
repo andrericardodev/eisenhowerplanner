@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check, Languages, LogOut, Monitor, Moon, Sun } from "lucide-react";
-import { signOut } from "@/app/(auth)/actions";
-import { useI18n } from "@/lib/i18n/context";
-import type { Locale, TranslationKey } from "@/lib/i18n/translations";
+import { useLocale, useTranslations } from "next-intl";
+import { usePathname } from "next/navigation";
+import { signOut } from "@/app/[locale]/(auth)/actions";
+import { routing, type Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 type ThemePreference = "light" | "dark" | "system";
@@ -13,7 +14,7 @@ type UserMenuProps = {
   email: string;
 };
 
-const themeOptions: { value: ThemePreference; labelKey: TranslationKey; icon: typeof Sun }[] = [
+const themeOptions: { value: ThemePreference; labelKey: "light" | "dark" | "system"; icon: typeof Sun }[] = [
   { value: "light", labelKey: "light", icon: Sun },
   { value: "dark", labelKey: "dark", icon: Moon },
   { value: "system", labelKey: "system", icon: Monitor }
@@ -21,15 +22,18 @@ const themeOptions: { value: ThemePreference; labelKey: TranslationKey; icon: ty
 
 const languageOptions: { value: Locale; label: string }[] = [
   { value: "en", label: "English" },
-  { value: "pt", label: "Português" },
+  { value: "pt-BR", label: "Português" },
   { value: "es", label: "Español" }
 ];
 
 export function UserMenu({ email }: UserMenuProps) {
-  const { locale, setLocale, t } = useI18n();
+  const locale = useLocale() as Locale;
+  const pathname = usePathname();
+  const t = useTranslations("UserMenu");
   const [isOpen, setIsOpen] = useState(false);
   const [theme, setTheme] = useState<ThemePreference>("system");
   const menuRef = useRef<HTMLDivElement>(null);
+  const pathWithoutLocale = pathname.replace(new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`), "") || "/";
 
   const initials = useMemo(() => {
     const source = email.split("@")[0] || "user";
@@ -112,12 +116,21 @@ export function UserMenu({ email }: UserMenuProps) {
 
           <MenuSection icon={<Languages className="size-4" />} label={t("language")}>
             {languageOptions.map((option) => (
-              <MenuOption
+              <a
                 key={option.value}
-                label={option.label}
-                isSelected={locale === option.value}
-                onClick={() => setLocale(option.value)}
-              />
+                role="menuitemradio"
+                aria-checked={locale === option.value}
+                href={`/${option.value}${pathWithoutLocale === "/" ? "" : pathWithoutLocale}`}
+                hrefLang={option.value}
+                className={cn(
+                  "flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-left text-sm transition hover:bg-muted",
+                  locale === option.value ? "text-foreground" : "text-muted-foreground"
+                )}
+              >
+                <span className="size-4" />
+                <span className="flex-1">{option.label}</span>
+                {locale === option.value ? <Check className="size-4" /> : null}
+              </a>
             ))}
           </MenuSection>
 
@@ -141,6 +154,7 @@ export function UserMenu({ email }: UserMenuProps) {
           <div className="my-1 h-px bg-border" />
 
           <form action={signOut}>
+            <input type="hidden" name="locale" value={locale} />
             <button
               type="submit"
               role="menuitem"

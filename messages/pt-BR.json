@@ -1,0 +1,129 @@
+{
+  "LocaleSwitcher": {
+    "label": "Alterar idioma"
+  },
+  "Auth": {
+    "brand": "Eisenhower Planner",
+    "email": "E-mail",
+    "password": "Senha",
+    "newPassword": "Nova senha",
+    "or": "ou",
+    "google": "Continuar com Google",
+    "login": {
+      "title": "Boas-vindas de volta",
+      "subtitle": "Entre para gerenciar suas prioridades pessoais e de trabalho.",
+      "noAccount": "Ainda nao tem conta?",
+      "createAccount": "Crie uma",
+      "forgotPassword": "Esqueceu a senha?",
+      "submit": "Entrar"
+    },
+    "signup": {
+      "title": "Crie sua conta",
+      "subtitle": "A confirmacao por e-mail e necessaria antes de abrir seu espaco de trabalho.",
+      "hasAccount": "Ja tem uma conta?",
+      "signIn": "Entrar",
+      "submit": "Criar conta"
+    },
+    "forgotPassword": {
+      "title": "Redefina sua senha",
+      "subtitle": "Informe seu e-mail e enviaremos um link seguro de redefinicao.",
+      "backToSignIn": "Voltar para entrar",
+      "submit": "Enviar link de redefinicao"
+    },
+    "resetPassword": {
+      "title": "Escolha uma nova senha",
+      "subtitle": "Use uma senha que voce ainda nao usou nesta conta.",
+      "footer": "Sua sessao foi verificada pelo link de redefinicao.",
+      "submit": "Atualizar senha"
+    },
+    "messages": {
+      "confirmEmail": "Confira seu e-mail para confirmar sua conta.",
+      "passwordResetSent": "E-mail de redefinicao de senha enviado."
+    }
+  },
+  "Dashboard": {
+    "brand": "Eisenhower Planner",
+    "title": "Espaco de prioridades",
+    "description": "Organize suas tarefas por urgencia e importancia para maximizar sua produtividade.",
+    "signOut": "Sair"
+  },
+  "UserMenu": {
+    "account": "Conta",
+    "language": "Idioma",
+    "mode": "Modo",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema",
+    "signOut": "Sair"
+  },
+  "Tasks": {
+    "form": {
+      "editTitle": "Editar tarefa",
+      "newTitle": "Nova tarefa",
+      "subtitle": "Os quadrantes sao calculados automaticamente.",
+      "cancel": "Cancelar",
+      "title": "Titulo",
+      "titlePlaceholder": "Preparar revisao semanal",
+      "description": "Descricao",
+      "descriptionPlaceholder": "Adicione contexto util",
+      "category": "Categoria",
+      "dueDate": "Data limite",
+      "urgent": "Urgente",
+      "important": "Importante",
+      "saveChanges": "Salvar alteracoes",
+      "addTask": "Adicionar tarefa"
+    },
+    "matrix": {
+      "title": "Matriz",
+      "activeTasks": "{count, plural, =0 {Nenhuma tarefa ativa} =1 {# tarefa ativa} other {# tarefas ativas}}",
+      "visibleTasks": "{count, plural, =0 {Nenhuma tarefa visivel} =1 {# tarefa visivel} other {# tarefas visiveis}}"
+    },
+    "filters": {
+      "category": "Categoria",
+      "status": "Status",
+      "all": "Todas",
+      "personal": "Pessoal",
+      "work": "Trabalho",
+      "pending": "Pendentes",
+      "completed": "Concluidas"
+    },
+    "summary": {
+      "total": "tarefas totais",
+      "pending": "pendentes",
+      "completed": "concluidas"
+    },
+    "categories": {
+      "personal": "Pessoal",
+      "work": "Trabalho"
+    },
+    "quadrants": {
+      "do-now": {
+        "title": "Fazer agora",
+        "subtitle": "Urgente e importante",
+        "empty": "Nenhuma tarefa urgente. Excelente!"
+      },
+      "schedule": {
+        "title": "Agendar",
+        "subtitle": "Importante, nao urgente",
+        "empty": "Adicione tarefas para planejar o futuro."
+      },
+      "delegate": {
+        "title": "Delegar",
+        "subtitle": "Urgente, nao importante",
+        "empty": "Considere delegar tarefas aqui."
+      },
+      "eliminate": {
+        "title": "Eliminar",
+        "subtitle": "Nem urgente nem importante",
+        "empty": "Evite adicionar tarefas aqui."
+      }
+    },
+    "actions": {
+      "toggleCompleted": "Alternar conclusao",
+      "markAsPending": "Marcar como pendente",
+      "markAsCompleted": "Marcar como concluida",
+      "edit": "Editar tarefa",
+      "delete": "Excluir tarefa"
+    }
+  }
+}

@@ -1,10 +1,10 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { useI18n } from "@/lib/i18n/context";
+import { useTranslations } from "next-intl";
 
 export function NewTaskButton() {
-  const { t } = useI18n();
+  const t = useTranslations("Tasks");
 
   return (
     <button
@@ -13,7 +13,7 @@ export function NewTaskButton() {
       className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-primary px-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
     >
       <Plus className="size-4" />
-      <span className="hidden sm:inline">{t("newTask")}</span>
+      <span className="hidden sm:inline">{t("form.newTitle")}</span>
     </button>
   );
 }

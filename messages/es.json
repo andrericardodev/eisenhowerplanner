@@ -44,6 +44,16 @@
   "Dashboard": {
     "brand": "Eisenhower Planner",
     "title": "Espacio de prioridades",
+    "description": "Organiza tus tareas por urgencia e importancia para maximizar tu productividad.",
+    "signOut": "Cerrar sesion"
+  },
+  "UserMenu": {
+    "account": "Cuenta",
+    "language": "Idioma",
+    "mode": "Modo",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema",
     "signOut": "Cerrar sesion"
   },
   "Tasks": {
@@ -65,12 +75,22 @@
     },
     "matrix": {
       "title": "Matriz",
-      "activeTasks": "{count, plural, =0 {No hay tareas activas} =1 {# tarea activa} other {# tareas activas}}"
+      "activeTasks": "{count, plural, =0 {No hay tareas activas} =1 {# tarea activa} other {# tareas activas}}",
+      "visibleTasks": "{count, plural, =0 {No hay tareas visibles} =1 {# tarea visible} other {# tareas visibles}}"
     },
     "filters": {
+      "category": "Categoria",
+      "status": "Estado",
       "all": "Todas",
       "personal": "Personal",
-      "work": "Trabajo"
+      "work": "Trabajo",
+      "pending": "Pendientes",
+      "completed": "Completadas"
+    },
+    "summary": {
+      "total": "tareas totales",
+      "pending": "pendientes",
+      "completed": "completadas"
     },
     "categories": {
       "personal": "Personal",
@@ -79,23 +99,29 @@
     "quadrants": {
       "do-now": {
         "title": "Hacer ahora",
-        "subtitle": "Urgente e importante"
+        "subtitle": "Urgente e importante",
+        "empty": "Sin tareas urgentes. Excelente!"
       },
       "schedule": {
         "title": "Programar",
-        "subtitle": "Importante, no urgente"
+        "subtitle": "Importante, no urgente",
+        "empty": "Anade tareas para planificar el futuro."
       },
       "delegate": {
         "title": "Delegar",
-        "subtitle": "Urgente, no importante"
+        "subtitle": "Urgente, no importante",
+        "empty": "Considera delegar tareas aqui."
       },
       "eliminate": {
         "title": "Eliminar",
-        "subtitle": "Ni urgente ni importante"
+        "subtitle": "Ni urgente ni importante",
+        "empty": "Evita anadir tareas aqui."
       }
     },
     "actions": {
       "toggleCompleted": "Alternar completada",
+      "markAsPending": "Marcar como pendiente",
+      "markAsCompleted": "Marcar como completada",
       "edit": "Editar tarea",
       "delete": "Eliminar tarea"
     }

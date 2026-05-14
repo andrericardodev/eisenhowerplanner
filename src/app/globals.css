@@ -3,9 +3,58 @@
 @tailwind utilities;
 
 :root {
+  --background: 251 251 252;
+  --foreground: 31 41 51;
+  --card: 255 255 255;
+  --card-foreground: 31 41 51;
+  --primary: 59 95 143;
+  --primary-foreground: 255 255 255;
+  --secondary: 244 245 247;
+  --secondary-foreground: 48 57 70;
+  --muted: 238 240 243;
+  --muted-foreground: 102 113 127;
+  --border: 226 229 233;
+  --input: 217 222 229;
+  --ring: 59 95 143;
+  --destructive: 198 72 50;
+  --quadrant-do: 191 75 53;
+  --quadrant-do-bg: 255 242 239;
+  --quadrant-schedule: 59 95 143;
+  --quadrant-schedule-bg: 240 245 255;
+  --quadrant-delegate: 138 109 18;
+  --quadrant-delegate-bg: 255 248 223;
+  --quadrant-eliminate: 102 113 127;
+  --quadrant-eliminate-bg: 244 245 247;
+  --radius: 0.625rem;
   color-scheme: light;
-  background: #f7f6f2;
-  color: #1f2933;
+  background: rgb(var(--background));
+  color: rgb(var(--foreground));
+}
+
+.dark {
+  --background: 21 24 32;
+  --foreground: 242 245 248;
+  --card: 29 34 43;
+  --card-foreground: 242 245 248;
+  --primary: 143 181 238;
+  --primary-foreground: 17 24 39;
+  --secondary: 41 49 61;
+  --secondary-foreground: 231 237 245;
+  --muted: 37 45 56;
+  --muted-foreground: 170 180 194;
+  --border: 52 61 74;
+  --input: 65 76 92;
+  --ring: 143 181 238;
+  --destructive: 255 139 117;
+  --quadrant-do: 255 155 136;
+  --quadrant-do-bg: 54 32 31;
+  --quadrant-schedule: 159 193 245;
+  --quadrant-schedule-bg: 31 42 61;
+  --quadrant-delegate: 229 201 94;
+  --quadrant-delegate-bg: 51 45 27;
+  --quadrant-eliminate: 183 192 204;
+  --quadrant-eliminate-bg: 40 46 55;
+  color-scheme: dark;
 }
 
 * {
@@ -14,11 +63,8 @@
 
 body {
   margin: 0;
-  background:
-    linear-gradient(135deg, rgba(82, 121, 111, 0.08), transparent 34%),
-    linear-gradient(315deg, rgba(214, 90, 49, 0.08), transparent 40%),
-    #f7f6f2;
-  color: #1f2933;
+  background: rgb(var(--background));
+  color: rgb(var(--foreground));
   font-family: Arial, Helvetica, sans-serif;
 }
 

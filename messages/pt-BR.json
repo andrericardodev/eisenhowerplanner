@@ -44,6 +44,16 @@
   "Dashboard": {
     "brand": "Eisenhower Planner",
     "title": "Espaco de prioridades",
+    "description": "Organize suas tarefas por urgencia e importancia para maximizar sua produtividade.",
+    "signOut": "Sair"
+  },
+  "UserMenu": {
+    "account": "Conta",
+    "language": "Idioma",
+    "mode": "Modo",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema",
     "signOut": "Sair"
   },
   "Tasks": {
@@ -65,12 +75,22 @@
     },
     "matrix": {
       "title": "Matriz",
-      "activeTasks": "{count, plural, =0 {Nenhuma tarefa ativa} =1 {# tarefa ativa} other {# tarefas ativas}}"
+      "activeTasks": "{count, plural, =0 {Nenhuma tarefa ativa} =1 {# tarefa ativa} other {# tarefas ativas}}",
+      "visibleTasks": "{count, plural, =0 {Nenhuma tarefa visivel} =1 {# tarefa visivel} other {# tarefas visiveis}}"
     },
     "filters": {
+      "category": "Categoria",
+      "status": "Status",
       "all": "Todas",
       "personal": "Pessoal",
-      "work": "Trabalho"
+      "work": "Trabalho",
+      "pending": "Pendentes",
+      "completed": "Concluidas"
+    },
+    "summary": {
+      "total": "tarefas totais",
+      "pending": "pendentes",
+      "completed": "concluidas"
     },
     "categories": {
       "personal": "Pessoal",
@@ -79,23 +99,29 @@
     "quadrants": {
       "do-now": {
         "title": "Fazer agora",
-        "subtitle": "Urgente e importante"
+        "subtitle": "Urgente e importante",
+        "empty": "Nenhuma tarefa urgente. Excelente!"
       },
       "schedule": {
         "title": "Agendar",
-        "subtitle": "Importante, nao urgente"
+        "subtitle": "Importante, nao urgente",
+        "empty": "Adicione tarefas para planejar o futuro."
       },
       "delegate": {
         "title": "Delegar",
-        "subtitle": "Urgente, nao importante"
+        "subtitle": "Urgente, nao importante",
+        "empty": "Considere delegar tarefas aqui."
       },
       "eliminate": {
         "title": "Eliminar",
-        "subtitle": "Nem urgente nem importante"
+        "subtitle": "Nem urgente nem importante",
+        "empty": "Evite adicionar tarefas aqui."
       }
     },
     "actions": {
       "toggleCompleted": "Alternar conclusao",
+      "markAsPending": "Marcar como pendente",
+      "markAsCompleted": "Marcar como concluida",
       "edit": "Editar tarefa",
       "delete": "Excluir tarefa"
     }

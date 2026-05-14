@@ -7,7 +7,7 @@ type FieldProps = {
 
 export function Field({ label, children }: FieldProps) {
   return (
-    <label className="grid gap-2 text-sm font-medium text-ink">
+    <label className="grid gap-2 text-sm font-medium text-foreground">
       {label}
       {children}
     </label>

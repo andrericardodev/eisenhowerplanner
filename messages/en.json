@@ -44,6 +44,16 @@
   "Dashboard": {
     "brand": "Eisenhower Planner",
     "title": "Priority workspace",
+    "description": "Organize your tasks by urgency and importance to maximize your productivity.",
+    "signOut": "Sign out"
+  },
+  "UserMenu": {
+    "account": "Account",
+    "language": "Language",
+    "mode": "Mode",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
     "signOut": "Sign out"
   },
   "Tasks": {
@@ -65,12 +75,22 @@
     },
     "matrix": {
       "title": "Matrix",
-      "activeTasks": "{count, plural, =0 {No active tasks} =1 {# active task} other {# active tasks}}"
+      "activeTasks": "{count, plural, =0 {No active tasks} =1 {# active task} other {# active tasks}}",
+      "visibleTasks": "{count, plural, =0 {No visible tasks} =1 {# visible task} other {# visible tasks}}"
     },
     "filters": {
+      "category": "Category",
+      "status": "Status",
       "all": "All",
       "personal": "Personal",
-      "work": "Work"
+      "work": "Work",
+      "pending": "Pending",
+      "completed": "Completed"
+    },
+    "summary": {
+      "total": "total tasks",
+      "pending": "pending",
+      "completed": "completed"
     },
     "categories": {
       "personal": "Personal",
@@ -79,23 +99,29 @@
     "quadrants": {
       "do-now": {
         "title": "Do Now",
-        "subtitle": "Urgent and important"
+        "subtitle": "Urgent and important",
+        "empty": "No urgent tasks. Excellent!"
       },
       "schedule": {
         "title": "Schedule",
-        "subtitle": "Important, not urgent"
+        "subtitle": "Important, not urgent",
+        "empty": "Add tasks to plan for the future."
       },
       "delegate": {
         "title": "Delegate",
-        "subtitle": "Urgent, not important"
+        "subtitle": "Urgent, not important",
+        "empty": "Consider delegating tasks here."
       },
       "eliminate": {
         "title": "Eliminate",
-        "subtitle": "Not urgent or important"
+        "subtitle": "Not urgent or important",
+        "empty": "Avoid adding tasks here."
       }
     },
     "actions": {
       "toggleCompleted": "Toggle completed",
+      "markAsPending": "Mark as pending",
+      "markAsCompleted": "Mark as completed",
       "edit": "Edit task",
       "delete": "Delete task"
     }

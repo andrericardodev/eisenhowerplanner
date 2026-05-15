@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { AuthCard } from "@/components/auth-card";
+import { AuthPasswordInput } from "@/components/auth-password-input";
 import { GoogleButton } from "@/components/google-button";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
@@ -35,19 +36,27 @@ export default async function SignupPage({ params, searchParams }: SignupPagePro
       <form action={signUp} className="grid gap-4">
         <input type="hidden" name="locale" value={locale} />
         <Field label={t("email")}>
-          <Input name="email" type="email" autoComplete="email" required />
+          <Input name="email" type="email" autoComplete="email" placeholder={t("emailPlaceholder")} required />
         </Field>
         <Field label={t("password")}>
-          <Input name="password" type="password" autoComplete="new-password" minLength={6} required />
+          <AuthPasswordInput
+            name="password"
+            autoComplete="new-password"
+            placeholder={t("newPasswordPlaceholder")}
+            minLength={6}
+            showLabel={t("showPassword")}
+            hideLabel={t("hidePassword")}
+            required
+          />
         </Field>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="h-11 w-full">
           {t("signup.submit")}
         </Button>
       </form>
-      <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-wide text-ink/40">
-        <span className="h-px flex-1 bg-ink/10" />
+      <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-wide text-muted-foreground">
+        <span className="h-px flex-1 bg-border" />
         {t("or")}
-        <span className="h-px flex-1 bg-ink/10" />
+        <span className="h-px flex-1 bg-border" />
       </div>
       <GoogleButton />
     </AuthCard>

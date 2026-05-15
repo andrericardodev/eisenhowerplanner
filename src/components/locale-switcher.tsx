@@ -19,15 +19,15 @@ export function LocaleSwitcher() {
   const pathWithoutLocale = pathname.replace(new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`), "") || "/";
 
   return (
-    <nav className="flex rounded-md border border-ink/10 bg-white p-1" aria-label={t("label")}>
+    <nav className="flex rounded-md border border-border bg-card/85 p-1 shadow-sm" aria-label={t("label")}>
       {routing.locales.map((option) => (
         <a
           key={option}
           href={`/${option}${pathWithoutLocale === "/" ? "" : pathWithoutLocale}`}
           hrefLang={option}
           className={cn(
-            "inline-flex h-8 min-w-9 items-center justify-center rounded px-2 text-xs font-bold text-ink/65",
-            option === locale && "bg-graphite text-white"
+            "inline-flex h-8 min-w-9 items-center justify-center rounded px-2 text-xs font-bold text-muted-foreground transition hover:text-foreground",
+            option === locale && "bg-primary text-primary-foreground hover:text-primary-foreground"
           )}
         >
           {localeLabels[option]}

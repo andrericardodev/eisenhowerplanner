@@ -31,9 +31,9 @@ export default async function ForgotPasswordPage({ params, searchParams }: Forgo
       <form action={requestPasswordReset} className="grid gap-4">
         <input type="hidden" name="locale" value={locale} />
         <Field label={t("email")}>
-          <Input name="email" type="email" autoComplete="email" required />
+          <Input name="email" type="email" autoComplete="email" placeholder={t("emailPlaceholder")} required />
         </Field>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="h-11 w-full">
           {t("forgotPassword.submit")}
         </Button>
       </form>

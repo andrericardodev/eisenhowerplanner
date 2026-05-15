@@ -1,8 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { AuthCard } from "@/components/auth-card";
+import { AuthPasswordInput } from "@/components/auth-password-input";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import type { Locale } from "@/i18n/routing";
 import { updatePassword } from "../actions";
 
@@ -26,9 +26,17 @@ export default async function ResetPasswordPage({ params, searchParams }: ResetP
       <form action={updatePassword} className="grid gap-4">
         <input type="hidden" name="locale" value={locale} />
         <Field label={t("newPassword")}>
-          <Input name="password" type="password" autoComplete="new-password" minLength={6} required />
+          <AuthPasswordInput
+            name="password"
+            autoComplete="new-password"
+            placeholder={t("newPasswordPlaceholder")}
+            minLength={6}
+            showLabel={t("showPassword")}
+            hideLabel={t("hidePassword")}
+            required
+          />
         </Field>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="h-11 w-full">
           {t("resetPassword.submit")}
         </Button>
       </form>

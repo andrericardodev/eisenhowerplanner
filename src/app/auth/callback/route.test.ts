@@ -12,10 +12,10 @@ vi.mock("@/lib/supabase/server", () => ({
 }));
 
 describe("auth callback", () => {
-  it("redirects to the default localized dashboard when no next path is provided", async () => {
+  it("redirects to the default dashboard when no next path is provided", async () => {
     const response = await GET(new Request("http://localhost:3000/auth/callback") as never);
 
-    expect(response.headers.get("location")).toBe("http://localhost:3000/en/dashboard");
+    expect(response.headers.get("location")).toBe("http://localhost:3000/dashboard");
   });
 
   it("exchanges the auth code and preserves a localized next path", async () => {
@@ -27,11 +27,11 @@ describe("auth callback", () => {
     expect(response.headers.get("location")).toBe("http://localhost:3000/pt-BR/dashboard");
   });
 
-  it("localizes unprefixed next paths with the default locale", async () => {
+  it("keeps unprefixed next paths on the default locale", async () => {
     const response = await GET(
       new Request("http://localhost:3000/auth/callback?next=/reset-password") as never
     );
 
-    expect(response.headers.get("location")).toBe("http://localhost:3000/en/reset-password");
+    expect(response.headers.get("location")).toBe("http://localhost:3000/reset-password");
   });
 });

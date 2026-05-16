@@ -45,7 +45,7 @@ describe("updateSession", () => {
 
     const response = await updateSession(createRequest("/dashboard"));
 
-    expect(response.headers.get("location")).toBe("http://localhost:3000/en/login");
+    expect(response.headers.get("location")).toBe("http://localhost:3000/login");
   });
 
   it("returns the provided response when no redirect is needed", async () => {

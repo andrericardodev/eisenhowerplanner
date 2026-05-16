@@ -97,21 +97,23 @@ function LandingHeader({ t }: LandingPageProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex min-w-0 items-center gap-3">
+        <Link href="/" className="flex shrink-0 items-center gap-3">
           <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Grid3X3 className="size-5" />
           </div>
-          <span className="truncate text-base font-semibold tracking-tight sm:text-lg">Eisenhower Planner</span>
+          <span className="hidden truncate text-base font-semibold tracking-tight sm:inline sm:text-lg">
+            Eisenhower Planner
+          </span>
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">
           <div className="hidden sm:block">
             <ThemeSwitcher />
           </div>
-          <Link href="/login" className={cn(secondaryButton, "h-10 px-4")}>
+          <Link href="/login" className={cn(secondaryButton, "h-10 px-2 sm:px-4")}>
             {t("login")}
           </Link>
-          <Link href="/signup" className={cn(headerCtaButton, "h-10 px-4")}>
+          <Link href="/signup" className={cn(headerCtaButton, "h-10 px-2 sm:px-4")}>
             {t("startForFree")}
           </Link>
         </div>

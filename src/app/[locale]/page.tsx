@@ -1,17 +1,8 @@
-import { redirect } from "next/navigation";
-import type { Locale } from "@/i18n/routing";
-import { createClient } from "@/lib/supabase/server";
+import { getTranslations } from "next-intl/server";
+import { LandingPage } from "@/components/landing-page";
 
-type HomeProps = {
-  params: Promise<{ locale: Locale }>;
-};
+export default async function Home() {
+  const t = await getTranslations("Landing");
 
-export default async function Home({ params }: HomeProps) {
-  const { locale } = await params;
-  const supabase = await createClient();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
-
-  redirect(user ? `/${locale}/dashboard` : `/${locale}/login`);
+  return <LandingPage t={t} />;
 }

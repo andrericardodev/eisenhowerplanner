@@ -92,7 +92,7 @@ export async function AuthCard({
             </span>
             <span className="text-lg font-semibold tracking-tight text-foreground">{t("brand")}</span>
           </Link>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto hidden items-center gap-2 sm:flex">
             <LocaleSwitcher />
             <ThemeSwitcher />
           </div>
@@ -114,6 +114,11 @@ export async function AuthCard({
             <div className="mt-8">{children}</div>
             <div className="mt-8 text-center text-sm text-muted-foreground">{footer}</div>
           </div>
+        </div>
+
+        <div className="flex justify-center gap-2 pb-1 sm:hidden">
+          <LocaleSwitcher />
+          <ThemeSwitcher />
         </div>
       </section>
     </main>

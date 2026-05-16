@@ -1,8 +1,8 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
-import { localizePath, routing, type Locale } from "@/i18n/routing";
+import { Link, usePathname } from "@/i18n/navigation";
+import { routing, type Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 const localeLabels: Record<Locale, string> = {
@@ -21,9 +21,10 @@ export function LocaleSwitcher() {
   return (
     <nav className="flex rounded-md border border-border bg-card/85 p-1 shadow-sm" aria-label={t("label")}>
       {routing.locales.map((option) => (
-        <a
+        <Link
           key={option}
-          href={localizePath(pathWithoutLocale, option)}
+          href={pathWithoutLocale}
+          locale={option}
           hrefLang={option}
           className={cn(
             "inline-flex h-8 min-w-9 items-center justify-center rounded px-2 text-xs font-bold text-muted-foreground transition hover:text-foreground",
@@ -31,7 +32,7 @@ export function LocaleSwitcher() {
           )}
         >
           {localeLabels[option]}
-        </a>
+        </Link>
       ))}
     </nav>
   );

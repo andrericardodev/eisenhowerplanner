@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import {
   DndContext,
   DragOverlay,
@@ -14,7 +14,7 @@ import {
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { useFormatter, useTranslations } from "next-intl";
-import { AlertTriangle, Calendar, Check, Clock, Inbox, Pencil, Plus, Trash2, Users, X } from "lucide-react";
+import { AlertTriangle, Calendar, Check, Clock, Inbox, MoreVertical, Pencil, Plus, Trash2, Users, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input, Textarea } from "@/components/ui/input";
@@ -93,6 +93,7 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
   const [form, setForm] = useState<TaskFormState>(emptyForm);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [activeDragTask, setActiveDragTask] = useState<Task | null>(null);
+  const [actionTask, setActionTask] = useState<Task | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
@@ -217,6 +218,33 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
     setTasks((current) => current.map((item) => (item.id === task.id ? (data as Task) : item)));
   }
 
+  async function moveTaskToQuadrant(task: Task, quadrantId: QuadrantId) {
+    const quadrant = getQuadrantById(quadrantId);
+
+    if (!quadrant || getQuadrantId(task) === quadrantId) return;
+
+    setTasks((current) =>
+      current.map((item) =>
+        item.id === task.id ? { ...item, is_urgent: quadrant.isUrgent, is_important: quadrant.isImportant } : item
+      )
+    );
+
+    const { data, error: updateError } = await supabase
+      .from("tasks")
+      .update({ is_urgent: quadrant.isUrgent, is_important: quadrant.isImportant })
+      .eq("id", task.id)
+      .select()
+      .single();
+
+    if (updateError) {
+      setError(updateError.message);
+      setTasks((current) => current.map((item) => (item.id === task.id ? task : item)));
+      return;
+    }
+
+    setTasks((current) => current.map((item) => (item.id === task.id ? (data as Task) : item)));
+  }
+
   async function deleteTask(taskId: string) {
     const { error: deleteError } = await supabase.from("tasks").delete().eq("id", taskId);
 
@@ -236,37 +264,15 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
   async function handleDragEnd(event: DragEndEvent) {
     const taskId = String(event.active.id);
     const quadrantId = event.over?.id as QuadrantId | undefined;
-    const quadrant = quadrantId ? getQuadrantById(quadrantId) : undefined;
 
     setActiveDragTask(null);
 
-    if (!quadrant) return;
+    if (!quadrantId) return;
 
     const task = tasks.find((item) => item.id === taskId);
-    if (!task || getQuadrantId(task) === quadrantId) return;
+    if (!task) return;
 
-    setTasks((current) =>
-      current.map((item) =>
-        item.id === taskId
-          ? { ...item, is_urgent: quadrant.isUrgent, is_important: quadrant.isImportant }
-          : item
-      )
-    );
-
-    const { data, error: updateError } = await supabase
-      .from("tasks")
-      .update({ is_urgent: quadrant.isUrgent, is_important: quadrant.isImportant })
-      .eq("id", taskId)
-      .select()
-      .single();
-
-    if (updateError) {
-      setError(updateError.message);
-      setTasks((current) => current.map((item) => (item.id === taskId ? task : item)));
-      return;
-    }
-
-    setTasks((current) => current.map((item) => (item.id === taskId ? (data as Task) : item)));
+    await moveTaskToQuadrant(task, quadrantId);
   }
 
   return (
@@ -303,7 +309,7 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
           onDragCancel={() => setActiveDragTask(null)}
           onDragEnd={handleDragEnd}
         >
-          <div className="grid min-h-[640px] grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:gap-6 lg:min-h-[640px] lg:grid-cols-2">
             {quadrants.map((quadrant) => (
               <QuadrantColumn
                 key={quadrant.id}
@@ -311,6 +317,7 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
                 tasks={visibleTasks.filter((task) => getQuadrantId(task) === quadrant.id)}
                 onEdit={startEditing}
                 onDelete={deleteTask}
+                onOpenActions={setActionTask}
                 onToggleCompleted={toggleCompleted}
                 t={t}
               />
@@ -335,8 +342,8 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
       </section>
 
       {isFormOpen ? (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/35 px-4 py-6 backdrop-blur-sm">
-          <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-5 shadow-2xl">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/35 px-4 py-4 backdrop-blur-sm sm:py-6">
+          <div className="max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-card p-5 shadow-2xl">
             <div className="flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-semibold tracking-tight text-card-foreground">
@@ -347,7 +354,7 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
               <Button
                 type="button"
                 variant="ghost"
-                className="size-9 rounded-full px-0"
+                className="size-10 shrink-0 rounded-full px-0 sm:size-9"
                 onClick={resetForm}
                 title={t("form.cancel")}
               >
@@ -372,14 +379,14 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
                   placeholder={t("form.descriptionPlaceholder")}
                 />
               </Field>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <Field label={t("form.category")}>
                   <select
                     value={form.category}
                     onChange={(event) =>
                       setForm((current) => ({ ...current, category: event.target.value as TaskCategory }))
                     }
-                    className="h-10 rounded-md border border-input bg-card px-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+                    className="h-10 w-full rounded-md border border-input bg-card px-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
                   >
                     <option value="personal">{t("categories.personal")}</option>
                     <option value="work">{t("categories.work")}</option>
@@ -393,7 +400,7 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
                   />
                 </Field>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <label className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground">
                   <input
                     type="checkbox"
@@ -420,6 +427,22 @@ export function TaskBoard({ initialTasks, userId }: TaskBoardProps) {
           </div>
         </div>
       ) : null}
+
+      {actionTask ? (
+        <TaskActionSheet
+          task={actionTask}
+          onClose={() => setActionTask(null)}
+          onEdit={() => {
+            setActionTask(null);
+            startEditing(actionTask);
+          }}
+          onDelete={() => {
+            setActionTask(null);
+            deleteTask(actionTask.id);
+          }}
+          t={t}
+        />
+      ) : null}
     </>
   );
 }
@@ -434,16 +457,19 @@ type SegmentedControlProps<T extends string> = {
 
 function SegmentedControl<T extends string>({ label, options, labels, value, onChange }: SegmentedControlProps<T>) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="grid gap-2 sm:flex sm:items-center">
       <span className="text-sm font-medium text-muted-foreground">{label}:</span>
-      <div className="flex gap-1 rounded-lg bg-muted p-1">
+      <div
+        className="grid grid-cols-[repeat(var(--option-count),minmax(0,1fr))] gap-1 rounded-lg bg-muted p-1 sm:flex"
+        style={{ "--option-count": options.length } as CSSProperties}
+      >
         {options.map((option) => (
           <button
             key={option}
             type="button"
             onClick={() => onChange(option)}
             className={cn(
-              "h-8 rounded-md px-3 text-sm font-medium text-muted-foreground transition-all hover:text-foreground",
+              "h-10 rounded-md px-2 text-sm font-medium text-muted-foreground transition-all hover:text-foreground sm:h-8 sm:px-3",
               value === option && "bg-card text-foreground shadow-sm"
             )}
           >
@@ -460,11 +486,20 @@ type QuadrantColumnProps = {
   tasks: Task[];
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
+  onOpenActions: (task: Task) => void;
   onToggleCompleted: (task: Task) => void;
   t: TasksTranslator;
 };
 
-function QuadrantColumn({ quadrantId, tasks, onEdit, onDelete, onToggleCompleted, t }: QuadrantColumnProps) {
+function QuadrantColumn({
+  quadrantId,
+  tasks,
+  onEdit,
+  onDelete,
+  onOpenActions,
+  onToggleCompleted,
+  t
+}: QuadrantColumnProps) {
   const style = quadrantStyles[quadrantId];
   const { isOver, setNodeRef } = useDroppable({ id: quadrantId });
 
@@ -514,6 +549,7 @@ function QuadrantColumn({ quadrantId, tasks, onEdit, onDelete, onToggleCompleted
                 task={task}
                 onEdit={onEdit}
                 onDelete={onDelete}
+                onOpenActions={onOpenActions}
                 onToggleCompleted={onToggleCompleted}
                 t={t}
               />
@@ -529,11 +565,12 @@ type TaskCardProps = {
   task: Task;
   onEdit: (task: Task) => void;
   onDelete: (taskId: string) => void;
+  onOpenActions: (task: Task) => void;
   onToggleCompleted: (task: Task) => void;
   t: TasksTranslator;
 };
 
-function TaskCard({ task, onEdit, onDelete, onToggleCompleted, t }: TaskCardProps) {
+function TaskCard({ task, onEdit, onDelete, onOpenActions, onToggleCompleted, t }: TaskCardProps) {
   const format = useFormatter();
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: task.id });
   const style = {
@@ -564,7 +601,7 @@ function TaskCard({ task, onEdit, onDelete, onToggleCompleted, t }: TaskCardProp
           </h4>
           {task.description ? <p className="mt-2 text-sm leading-5 text-muted-foreground">{task.description}</p> : null}
         </div>
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 flex-col items-center gap-1 sm:flex-row">
           <IconButton
             title={task.status === "completed" ? t("actions.markAsPending") : t("actions.markAsCompleted")}
             onClick={() => onToggleCompleted(task)}
@@ -576,16 +613,70 @@ function TaskCard({ task, onEdit, onDelete, onToggleCompleted, t }: TaskCardProp
           >
             <Check className="size-4" />
           </IconButton>
-          <IconButton title={t("actions.edit")} onClick={() => onEdit(task)} className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
+          <IconButton title={t("actions.more")} onClick={() => onOpenActions(task)} className="sm:hidden">
+            <MoreVertical className="size-4" />
+          </IconButton>
+          <IconButton
+            title={t("actions.edit")}
+            onClick={() => onEdit(task)}
+            className="hidden opacity-100 sm:inline-flex sm:opacity-0 sm:group-hover:opacity-100"
+          >
             <Pencil className="size-4" />
           </IconButton>
-          <IconButton title={t("actions.delete")} onClick={() => onDelete(task.id)} className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
+          <IconButton
+            title={t("actions.delete")}
+            onClick={() => onDelete(task.id)}
+            className="hidden opacity-100 sm:inline-flex sm:opacity-0 sm:group-hover:opacity-100"
+          >
             <Trash2 className="size-4" />
           </IconButton>
         </div>
       </div>
       <TaskCardMeta task={task} t={t} formatDate={(date) => format.dateTime(date, { day: "2-digit", month: "short" })} />
     </article>
+  );
+}
+
+function TaskActionSheet({
+  task,
+  onClose,
+  onEdit,
+  onDelete,
+  t
+}: {
+  task: Task;
+  onClose: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  t: TasksTranslator;
+}) {
+  return (
+    <div className="fixed inset-0 z-[70] flex items-end bg-foreground/35 px-3 pb-3 backdrop-blur-sm sm:hidden">
+      <button type="button" className="absolute inset-0 cursor-default" aria-label={t("form.cancel")} onClick={onClose} />
+      <div className="relative w-full overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-2xl">
+        <div className="border-b border-border px-4 py-3">
+          <p className="truncate text-sm font-semibold text-foreground">{task.title}</p>
+        </div>
+        <div className="grid p-1.5">
+          <button
+            type="button"
+            onClick={onEdit}
+            className="flex h-12 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-medium text-foreground transition hover:bg-muted"
+          >
+            <Pencil className="size-4" />
+            {t("actions.edit")}
+          </button>
+          <button
+            type="button"
+            onClick={onDelete}
+            className="flex h-12 w-full items-center gap-3 rounded-lg px-3 text-left text-sm font-medium text-destructive transition hover:bg-destructive/10"
+          >
+            <Trash2 className="size-4" />
+            {t("actions.delete")}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -667,7 +758,7 @@ function IconButton({
       onClick={onClick}
       onPointerDown={(event) => event.stopPropagation()}
       className={cn(
-        "inline-flex size-8 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground",
+        "inline-flex size-10 items-center justify-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground sm:size-8",
         className
       )}
     >

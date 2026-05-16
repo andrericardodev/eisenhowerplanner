@@ -1,13 +1,11 @@
 "use server";
 
 import { getTranslations } from "next-intl/server";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { isLocale, localizePath, routing, type Locale } from "@/i18n/routing";
+import { getSiteUrl } from "@/lib/site-url";
 import { createClient } from "@/lib/supabase/server";
-
-function getSiteUrl() {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-}
 
 function getLocale(formData: FormData): Locale {
   const locale = String(formData.get("locale"));
@@ -39,12 +37,13 @@ export async function signUp(formData: FormData) {
   const t = await getTranslations({ locale, namespace: "Auth.messages" });
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
+  const siteUrl = getSiteUrl(await headers());
 
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${getSiteUrl()}/auth/callback?next=${localizePath("/dashboard", locale)}`
+      emailRedirectTo: `${siteUrl}/auth/callback?next=${localizePath("/dashboard", locale)}`
     }
   });
 
@@ -67,9 +66,10 @@ export async function requestPasswordReset(formData: FormData) {
   const locale = getLocale(formData);
   const t = await getTranslations({ locale, namespace: "Auth.messages" });
   const email = String(formData.get("email"));
+  const siteUrl = getSiteUrl(await headers());
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${getSiteUrl()}/auth/callback?next=${localizePath("/reset-password", locale)}`
+    redirectTo: `${siteUrl}/auth/callback?next=${localizePath("/reset-password", locale)}`
   });
 
   if (error) {

@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
-import { routing, type Locale } from "@/i18n/routing";
+import { localizePath, routing, type Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 const localeLabels: Record<Locale, string> = {
@@ -23,7 +23,7 @@ export function LocaleSwitcher() {
       {routing.locales.map((option) => (
         <a
           key={option}
-          href={`/${option}${pathWithoutLocale === "/" ? "" : pathWithoutLocale}`}
+          href={localizePath(pathWithoutLocale, option)}
           hrefLang={option}
           className={cn(
             "inline-flex h-8 min-w-9 items-center justify-center rounded px-2 text-xs font-bold text-muted-foreground transition hover:text-foreground",

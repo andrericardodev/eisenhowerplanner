@@ -5,7 +5,7 @@ describe("routing", () => {
   it("defines English as the default locale with initial global locales", () => {
     expect(routing.defaultLocale).toBe("en");
     expect(routing.locales).toEqual(["en", "pt-BR", "es"]);
-    expect(routing.localePrefix).toBe("always");
+    expect(routing.localePrefix).toBe("as-needed");
   });
 });
 
@@ -22,6 +22,10 @@ describe("isLocale", () => {
 describe("localizePath", () => {
   it("prefixes absolute paths with the provided locale", () => {
     expect(localizePath("/dashboard", "pt-BR")).toBe("/pt-BR/dashboard");
+  });
+
+  it("keeps default locale paths unprefixed", () => {
+    expect(localizePath("/dashboard", "en")).toBe("/dashboard");
   });
 
   it("prefixes relative paths with the provided locale", () => {

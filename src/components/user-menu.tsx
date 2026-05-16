@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Check, Languages, LogOut, Monitor, Moon, Sun } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { usePathname } from "next/navigation";
 import { signOut } from "@/app/[locale]/(auth)/actions";
-import { localizePath, routing, type Locale } from "@/i18n/routing";
+import { Link, usePathname } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 type ThemePreference = "light" | "dark" | "system";
@@ -33,7 +33,7 @@ export function UserMenu({ email }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [theme, setTheme] = useState<ThemePreference>("system");
   const menuRef = useRef<HTMLDivElement>(null);
-  const pathWithoutLocale = pathname.replace(new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`), "") || "/";
+  const pathWithoutLocale = pathname || "/";
 
   const initials = useMemo(() => {
     const source = email.split("@")[0] || "user";
@@ -116,11 +116,12 @@ export function UserMenu({ email }: UserMenuProps) {
 
           <MenuSection icon={<Languages className="size-4" />} label={t("language")}>
             {languageOptions.map((option) => (
-              <a
+              <Link
                 key={option.value}
                 role="menuitemradio"
                 aria-checked={locale === option.value}
-                href={localizePath(pathWithoutLocale, option.value)}
+                href={pathWithoutLocale}
+                locale={option.value}
                 hrefLang={option.value}
                 className={cn(
                   "flex h-9 w-full items-center gap-2 rounded-lg px-2.5 text-left text-sm transition hover:bg-muted",
@@ -130,7 +131,7 @@ export function UserMenu({ email }: UserMenuProps) {
                 <span className="size-4" />
                 <span className="flex-1">{option.label}</span>
                 {locale === option.value ? <Check className="size-4" /> : null}
-              </a>
+              </Link>
             ))}
           </MenuSection>
 

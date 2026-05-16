@@ -186,6 +186,7 @@
       "toggleCompleted": "Toggle completed",
       "markAsPending": "Mark as pending",
       "markAsCompleted": "Mark as completed",
+      "more": "More options",
       "edit": "Edit task",
       "delete": "Delete task"
     }
